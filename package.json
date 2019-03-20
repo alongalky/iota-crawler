@@ -4,7 +4,7 @@
   "description": "",
   "main": "curl.lib.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "jest"
   },
   "keywords": [],
   "author": "",
@@ -15,10 +15,12 @@
     "eslint-plugin-import": "^2.16.0",
     "eslint-plugin-node": "^8.0.1",
     "eslint-plugin-promise": "^4.0.1",
-    "eslint-plugin-standard": "^4.0.0"
+    "eslint-plugin-standard": "^4.0.0",
+    "jest": "^24.5.0"
   },
   "dependencies": {
     "@iota/core": "^1.0.0-beta.11",
-    "yargs": "^13.2.2"
+    "yargs": "^13.2.2",
+    "zeromq": "^5.1.0"
   }
 }

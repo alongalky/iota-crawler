@@ -18,7 +18,6 @@ const bfs = ({ getApprovees }) => ({ start, f = console.log, max = 10 }) => {
 
   const scan = () => {
     const current = queue.shift()
-    visited[current] = true
     f(current)
     return addApprovees(current)
   }
