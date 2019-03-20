@@ -1,4 +1,24 @@
-const argv = require('yargs').argv
+const argv = require('yargs')
+  .option('direction', {
+    alias: 'd',
+    describe: 'direction to scan',
+    choices: ['future', 'past', 'both'],
+    default: 'both'
+  })
+  .option('hash', {
+    alias: 'h',
+    describe: 'hash of the transaction you would like to start the crawl from',
+    demandOption: true
+  })
+  .option('max', {
+    alias: 'm',
+    describe: 'maximum number of transactions to scan',
+    number: true
+  })
+  .help()
+  .version('0.0.1')
+  .argv
+
 const { composeAPI } = require('@iota/core')
 const iota = composeAPI({
   provider: 'http://localhost:14265'
@@ -6,10 +26,11 @@ const iota = composeAPI({
 const { getApprovees, getApprovers, toZmqFormat } = require('./src/utils.js')(iota)
 
 const getNext = hash => {
-  return Promise.all([getApprovees(hash), getApprovers(hash)])
-    .then(([approvees, approvers]) => {
-      return [].concat(approvees, approvers)
-    })
+  const getters = argv.direction === 'future' ? [getApprovers]
+    : argv.direction === 'past' ? [getApprovees] : [getApprovees, getApprovers]
+
+  return Promise.all(getters.map(f => f(hash)))
+    .then(responses => responses.reduce((prev, val) => prev.concat(val), []))
 }
 
 const { bfs } = require('./src/bfs.js')({ getNext })
