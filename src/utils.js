@@ -8,8 +8,17 @@ const getApprovees = ({ iota }) => hash =>
         txs[0].trunkTransaction,
         txs[0].branchTransaction
       ]
+
+      // remove double approvals
+      if (approvees[0] === approvees[1]) {
+        approvees.pop()
+      }
+
       return approvees
     })
+
+const getApprovers = ({ iota }) => hash =>
+  iota.findTransactions({ approvees: [hash] })
 
 const toZmqFormat = tx => [
   'tx',
@@ -29,5 +38,6 @@ const toZmqFormat = tx => [
 
 module.exports = iota => ({
   getApprovees: getApprovees({ iota }),
+  getApprovers: getApprovers({ iota }),
   toZmqFormat
 })
