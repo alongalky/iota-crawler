@@ -4,6 +4,7 @@
   "description": "",
   "main": "curl.lib.js",
   "scripts": {
+    "lint": "eslint .",
     "test": "jest"
   },
   "keywords": [],

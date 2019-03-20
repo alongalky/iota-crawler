@@ -3,8 +3,16 @@ const { composeAPI } = require('@iota/core')
 const iota = composeAPI({
   provider: 'http://localhost:14265'
 })
-const { getApprovees, toZmqFormat } = require('./src/utils.js')(iota)
-const { bfs } = require('./src/bfs.js')({ getApprovees })
+const { getApprovees, getApprovers, toZmqFormat } = require('./src/utils.js')(iota)
+
+const getNext = hash => {
+  return Promise.all([getApprovees(hash), getApprovers(hash)])
+    .then(([approvees, approvers]) => {
+      return [].concat(approvees, approvers)
+    })
+}
+
+const { bfs } = require('./src/bfs.js')({ getNext })
 
 const zmq = require('zeromq')
 const sock = zmq.socket('pub')
